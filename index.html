@@ -1,0 +1,371 @@
+<html>
+
+<head>
+    <style>
+        body {
+            border: 1px solid #48545c;
+            overflow-y: hidden;
+        }
+
+        @media (-webkit-device-pixel-ratio: 1.5),
+        (device-pixel-ratio: 1.5),
+        (-webkit-device-pixel-ratio: 2),
+        (device-pixel-ratio: 2),
+        (-webkit-device-pixel-ratio: 3),
+        (device-pixel-ratio: 3) {
+            #window-controls .icon {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        #window-controls {
+            -webkit-app-region: no-drag;
+        }
+
+        #window-controls .button {
+            user-select: none;
+        }
+
+        #window-controls .button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #window-controls .button:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #close-button:hover {
+            background: #E81123 !important;
+        }
+
+        #close-button:active {
+            background: #F1707A !important;
+        }
+
+        #close-button:active .icon {
+            filter: invert(1);
+        }
+
+        #restore-button {
+            display: none !important;
+        }
+
+        #titlebar {
+            display: block;
+            position: fixed;
+            height: 32px;
+            width: calc(100% - 2px);
+            /*Compensate for body 1px border*/
+        }
+
+        #main {
+            height: calc(100% - 32px);
+            margin-top: 32px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            vertical-align: baseline;
+        }
+
+        html {
+            box-sizing: border-box;
+        }
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #1A2933;
+            color: #FFF;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        p {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #titlebar {
+            padding: 4px;
+        }
+
+        #titlebar #drag-region {
+            width: 100%;
+            height: 100%;
+            -webkit-app-region: drag;
+        }
+
+        #titlebar {
+            color: #FFF;
+        }
+
+        #window-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 46px);
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+        }
+
+        #window-controls .button {
+            grid-row: 1 / span 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        #titlebar #drag-region {
+            display: grid;
+            grid-template-columns: auto 138px;
+        }
+
+        #window-title {
+            grid-column: 1;
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+            overflow: hidden;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+        }
+
+        #window-title span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.5;
+        }
+
+        #min-button {
+            grid-column: 1;
+        }
+
+        #max-button,
+        #restore-button {
+            grid-column: 2;
+        }
+
+        #close-button {
+            grid-column: 3;
+        }
+
+        .maximized #titlebar {
+            width: 100%;
+            padding: 0;
+        }
+
+        .maximized #window-title {
+            margin-left: 12px;
+        }
+
+        .maximized #restore-button {
+            display: flex !important;
+        }
+
+        .maximized #max-button {
+            display: none;
+        }
+
+        body {
+            background: #48545c;
+        }
+
+        html {
+            border-radius: 25px;
+        }
+
+        .start {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            border-radius: 8px;
+            height: 40px;
+            width: 80px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .start:hover {
+            background: white;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="titlebar" style="border-radius: 5px">
+        <div id="drag-region">
+            <div id="window-title">
+                <span>Geoxine</span>
+            </div>
+            <div id="window-controls">
+
+                <div class="button" id="min-button">
+                    <img class="icon" srcset="icons/min-w-10.png 1x, icons/min-w-12.png 1.25x, icons/min-w-15.png 1.5x, icons/min-w-15.png 1.75x, icons/min-w-20.png 2x, icons/min-w-20.png 2.25x, icons/min-w-24.png 2.5x, icons/min-w-30.png 3x, icons/min-w-30.png 3.5x" draggable="false" />
+                </div>
+
+                <div class="button" id="max-button">
+                    <img class="icon" srcset="icons/max-w-10.png 1x, icons/max-w-12.png 1.25x, icons/max-w-15.png 1.5x, icons/max-w-15.png 1.75x, icons/max-w-20.png 2x, icons/max-w-20.png 2.25x, icons/max-w-24.png 2.5x, icons/max-w-30.png 3x, icons/max-w-30.png 3.5x" draggable="false" />
+                </div>
+
+                <div class="button" id="restore-button">
+                    <img class="icon" srcset="icons/restore-w-10.png 1x, icons/restore-w-12.png 1.25x, icons/restore-w-15.png 1.5x, icons/restore-w-15.png 1.75x, icons/restore-w-20.png 2x, icons/restore-w-20.png 2.25x, icons/restore-w-24.png 2.5x, icons/restore-w-30.png 3x, icons/restore-w-30.png 3.5x" draggable="false" />
+                </div>
+
+                <div class="button" id="close-button">
+                    <img class="icon" srcset="icons/close-w-10.png 1x, icons/close-w-12.png 1.25x, icons/close-w-15.png 1.5x, icons/close-w-15.png 1.75x, icons/close-w-20.png 2x, icons/close-w-20.png 2.25x, icons/close-w-24.png 2.5x, icons/close-w-30.png 3x, icons/close-w-30.png 3.5x" draggable="false" />
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <div id="main" style="border-radius: 5px">
+        <h1>Geoxine configuration</h1>
+        <p> Enable/disable mods before starting GD </p>
+        <br>
+        <hr style="background: white;height:2px;">
+		<br>
+		<div id="dlls"></div>
+        <br>
+		<hr style="background: white;height:2px;">
+		<br>
+        <button class="start"> Start GD </button>
+    </div>
+
+    <script>
+        const remote = require('@electron/remote');
+        const {
+            spawn
+        } = require('child_process');
+        const unzipper = require('unzipper');
+        const fs = require('fs');
+		
+        const win = remote.getCurrentWindow();
+        /* Note this is different to the
+html global `window` variable */
+
+        // When document has loaded, initialise
+        document.onreadystatechange = (event) => {
+            if (document.readyState == "complete") {
+                handleWindowControls();
+            }
+        };
+
+		let directory_mods = fs.readdirSync('./mods');
+		directory_mods.forEach((x, i) => {
+			// (ex: id="btoa(run-info)" class="dll_select") <input id=btoa(x) class="dll_select" type="checkbox">
+			let group = document.createElement('div');
+			let checkbox = document.createElement('input');
+			let text = document.createElement('label');
+			text.for = " " + x;
+			text.innerText = x.split('.dll')[0]
+			checkbox.value = x;
+			checkbox.checked = true;
+			checkbox.setAttribute("class", "dll_select");
+			checkbox.type = "checkbox";
+			group.appendChild(checkbox);
+			group.appendChild(text);
+			document.querySelector('#dlls').appendChild(group);
+		})
+		let checkIgnored = () => {
+			let ignoreList = [];
+			document.querySelectorAll('.dll_select').forEach(x => {
+				let [val, enabled] = [x.value, x.checked];
+				if (!enabled) ignoreList.push(val);
+			})
+			return ignoreList;
+		}
+        let openGD = () => {
+			const ignoredMods = checkIgnored();
+			if (!fs.existsSync('ignored_mods')) fs.mkdirSync('ignored_mods');
+			ignoredMods.forEach(x => fs.renameSync('./mods/' + x, './ignored_mods/' + x));
+
+            fs.createReadStream('./geoxine.dat')
+                .pipe(unzipper.Extract({
+                    path: './geoxine'
+                }))
+                .on('finish', () => {
+				    const appName = './GeometryDash.exe';
+
+					const app = spawn(appName);
+
+                    let proc = spawn('./geoxine/exec.exe', ['geoxine'], {
+						windowsHide: true
+                    });
+					proc.stderr.on('data', (e) => console.log('GEOXINE INJECT ERR DATA:', e.toString()))
+                    proc.on('close', () => {
+						fs.rmSync('./geoxine', {
+							recursive: true
+						})
+						ignoredMods.forEach(x => fs.renameSync('./ignored_mods/' + x, './mods/' + x));
+					});
+                });
+        }
+		document.querySelector('.start').onclick = openGD;
+        window.onbeforeunload = (event) => {
+            /* If window is reloaded, remove win event listeners
+            (DOM element listeners get auto garbage collected but not
+            Electron win listeners as the win is not dereferenced unless closed) */
+            win.removeAllListeners();
+        }
+
+        function handleWindowControls() {
+            // Make minimise/maximise/restore/close buttons work when they are clicked
+            document.getElementById('min-button').addEventListener("click", event => {
+                win.minimize();
+            });
+
+            document.getElementById('max-button').addEventListener("click", event => {
+                win.maximize();
+            });
+
+            document.getElementById('restore-button').addEventListener("click", event => {
+                win.unmaximize();
+            });
+
+            document.getElementById('close-button').addEventListener("click", event => {
+                win.close();
+            });
+
+            // Toggle maximise/restore buttons when maximisation/unmaximisation occurs
+            toggleMaxRestoreButtons();
+            win.on('maximize', toggleMaxRestoreButtons);
+            win.on('unmaximize', toggleMaxRestoreButtons);
+
+            function toggleMaxRestoreButtons() {
+                if (win.isMaximized()) {
+                    document.body.classList.add('maximized');
+                } else {
+                    document.body.classList.remove('maximized');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
