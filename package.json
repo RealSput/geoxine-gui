@@ -1,0 +1,21 @@
+{
+  "name": "geoxine-gui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@electron/remote": "^2.0.9",
+    "custom-electron-titlebar": "^4.2.0-beta.0",
+    "unzipper": "^0.10.11"
+  },
+  "devDependencies": {
+    "electron": "^23.1.4",
+    "electron-packager": "^17.1.1"
+  }
+}
